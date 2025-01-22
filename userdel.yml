@@ -1,0 +1,9 @@
+---
+- name: Delete a Windows user
+  hosts: Windows11
+  gather_facts: true
+  tasks:
+    - name: Remove the Windows user
+      ansible.windows.win_user:
+        name: Sword   # Replace with the username you want to delete
+        state: absent   # This ensures the user is deleted

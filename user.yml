@@ -1,0 +1,20 @@
+---
+- name: Create a Windows user
+  hosts: Windows11
+  gather_facts: true
+  tasks:
+    - name: Create a new user
+      ansible.windows.win_user:
+        name: Sword            # The username to create
+        password: Newday@123  # The password for the new user
+        state: present           # Ensure the user is present (created)
+        groups:
+          - Administrators       # Optionally add to a group (e.g., Administrators)
+        update_password: on_create  # Only update password when user is created
+
+    - name: Add user to additional groups (optional)
+      ansible.windows.win_user:
+        name: Sword
+        groups:
+          - "Remote Desktop Users"  # Add the user to any other groups if needed
+        state: present

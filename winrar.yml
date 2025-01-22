@@ -1,0 +1,17 @@
+---
+- name: Install WinRAR without Python
+  hosts: Windows11
+  gather_facts: no  # Skip Python dependency for fact gathering
+  tasks:
+    - name: Download WinRAR installer
+      ansible.windows.win_get_url:
+        url: "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-701.exe"
+        dest: "C:\\Ansible\\WinRAR-x64.exe"
+
+    - name: Install WinRAR silently
+      ansible.windows.win_shell: |
+        Start-Process -FilePath "C:\\Ansible\\WinRAR-x64.exe" -ArgumentList "/S" -Wait
+
+    - name: Clean up WinRAR installer
+      ansible.windows.win_shell: |
+        Remove-Item -Path "C:\\Ansible\\WinRAR-x64.exe" -Force

@@ -1,0 +1,23 @@
+---
+- name: Install 7-Zip on Windows directly
+  hosts: Windows11
+  gather_facts: yes
+  tasks:
+    - name: Download 7-Zip installer
+      win_get_url:
+        url: https://www.7-zip.org/a/7z1900-x64.exe
+        dest: C:\Ansible\7z1900-x64.exe
+        validate_certs: yes
+
+    - name: Install 7-Zip
+      win_package:
+        path: C:\Ansible\7z1900-x64.exe
+        state: present
+        product_id: '7-Zip 19.00 (x64 edition)'  # Version of the 7-Zip product
+        arguments: /S
+
+    - name: Clean up installer
+      win_file:
+        path: C:\Ansible\7z1900-x64.exe
+        state: absent
+
