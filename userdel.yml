@@ -1,6 +1,6 @@
 ---
 - name: Delete a Windows user
-  hosts: Windows11
+  hosts: 10.200.2.214
   gather_facts: true
   tasks:
     - name: Remove the Windows user
