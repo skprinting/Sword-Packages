@@ -1,0 +1,23 @@
+---
+- name: Install Windows 11 version 24H2 (KB5050009)
+  hosts: 10.200.2.214
+  gather_facts: yes
+
+  tasks:
+    - name: Install KB5050009 update (Windows 11 version 24H2)
+      ansible.windows.win_updates:
+        name: "KB5050009"  # Directly targeting the KB number
+        state: installed  # Ensures the update is installed
+        reboot: no  # Prevent automatic reboot
+      register: update_result
+
+    - name: Check if a reboot is required after the update
+      debug:
+        msg: "Reboot required"
+      when: update_result.reboot_required | default(false)
+
+    - name: Reboot the system if required
+      ansible.windows.win_reboot:
+        reboot_timeout: 600
+        test_command: whoami
+      when: update_result.reboot_required | default(false)
