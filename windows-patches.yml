@@ -1,25 +1,21 @@
 ---
-- name: Install Windows updates
-  hosts: 10.200.2.214  # Replace with your Windows host
+- name: Update Windows 11 OS Version
+  hosts: 10.200.2.214
   gather_facts: yes
+
   tasks:
-    - name: Install all available updates
+    - name: Install all available updates (including feature updates)
       ansible.windows.win_updates:
         category_names:
-          - "CriticalUpdates"
           - "SecurityUpdates"
-          - "CumulativeUpdates"
-        reboot: no  # Do not automatically reboot; handle it manually
+          - "CriticalUpdates"
+          - "FeaturePacks"  # This category includes feature updates (OS version upgrades)
+        reboot: no  # Do not reboot automatically, handle it manually
         state: installed
-      register: ansible_windows_update
+      register: update_result
 
-    - name: Check if a reboot is required
-      debug:
-        msg: "Reboot required"
-      when: ansible_windows_update.reboot_required | default(false)
-
-    - name: Reboot the system if required
+    - name: Reboot if a reboot is required after the update
       ansible.windows.win_reboot:
         reboot_timeout: 600  # Set the timeout in seconds
-        test_command: whoami  # Run 'whoami' to verify if the system is up after reboot
-      when: ansible_windows_update.reboot_required | default(false)
+        test_command: whoami  # Run 'whoami' to ensure the system is up after reboot
+      when: update_result.reboot_required | default(false)
