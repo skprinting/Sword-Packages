@@ -1,0 +1,43 @@
+- name: Install software on Windows
+  hosts: 10.200.2.214
+  tasks:
+    - name: Download and Install 7-Zip
+      win_get_url:
+        url: https://www.7-zip.org/a/7z1900-x64.exe
+        dest: C:\Temp\7z1900-x64.exe
+      register: result_7zip
+      until: result_7zip is success
+      retries: 3
+      delay: 10
+
+    - name: Install 7-Zip
+      win_command: C:\Temp\7z1900-x64.exe /S
+      when: result_7zip is success
+
+    - name: Download and Install Notepad++
+      win_get_url:
+        url: https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v7.9.5/npp.7.9.5.Installer.x64.exe
+        dest: C:\Temp\npp_installer.exe
+      register: result_notepad
+      until: result_notepad is success
+      retries: 3
+      delay: 10
+
+    - name: Install Notepad++
+      win_command: C:\Temp\npp_installer.exe /S
+      when: result_notepad is success
+
+    - name: Download and Install VLC Media Player
+      win_get_url:
+        url: https://get.videolan.org/vlc/3.0.21/win32/vlc-3.0.21-win32.exe
+        dest: C:\Temp\vlc_installer.exe
+      register: result_vlc
+      until: result_vlc is success
+      retries: 3
+      delay: 10
+
+    - name: Install VLC Media Player
+      win_command: C:\Temp\vlc_installer.exe /S
+      when: result_vlc is success
+
+    
